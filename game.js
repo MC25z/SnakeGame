@@ -3,6 +3,9 @@ const ctx = canvas.getContext("2d");
 
 let socketReady = false;
 
+// Socket
+const socket = io();
+
 socket.on("connect", () => {
     socketReady = true;
 });
@@ -10,8 +13,6 @@ socket.on("connect", () => {
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-// Socket
-const socket = io();
 
 // Game state
 let worldSize = 6000;
@@ -226,3 +227,85 @@ function drawHead(p) {
 
     ctx.restore();
 }
+
+
+
+
+
+
+
+
+
+
+
+/* -------------------------------------------------
+   1️⃣  Helper drawing functions
+   ------------------------------------------------- */
+function drawGrid() {
+  // optional – draw a faint grid (already in CSS background)
+  // keep this empty if you don’t need a grid overlay.
+}
+
+function drawFood() {
+  ctx.fillStyle = "#ffdd00";          // yellow food
+  for (const f of food) {
+    ctx.beginPath();
+    ctx.arc(f.x, f.y, f.size, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
+function drawSnakes() {
+  for (const id in players) {
+    const p = players[id];
+    // body – draw a circle whose radius grows with length
+    const radius = Math.max(p.length / 10, 5);
+    ctx.fillStyle = p.color;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
+    ctx.fill();
+
+    // eyes – simple white dots
+    const eyeOffset = radius * 0.4;
+    const eyeSize = radius * 0.2;
+    const eyeX = p.x + Math.cos(p.angle) * eyeOffset;
+    const eyeY = p.y + Math.sin(p.angle) * eyeOffset;
+    ctx.fillStyle = "#fff";
+    ctx.beginPath();
+    ctx.arc(eyeX, eyeY, eyeSize, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
+/* -------------------------------------------------
+   2️⃣  Main render loop (single definition)
+   ------------------------------------------------- */
+function loop() {
+  sendInput();          // send mouse direction & boost flag
+  updateCamera();       // keep camera centered on your snake
+  updateBoost();        // smooth boost‑speed transition
+  draw();               // clear canvas & draw everything
+  requestAnimationFrame(loop);
+}
+
+/* -------------------------------------------------
+   3️⃣  Draw routine (calls the helpers above)
+   ------------------------------------------------- */
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.save();
+
+  // translate according to camera position
+  ctx.translate(-camera.x, -camera.y);
+
+  drawGrid();
+  drawFood();
+  drawSnakes();
+
+  ctx.restore();
+}
+
+/* -------------------------------------------------
+   4️⃣  Start the loop (already at the bottom of the file)
+   ------------------------------------------------- */
+loop();   // keep this – it kicks off the animation
