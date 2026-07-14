@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Slither Clone</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+<div id="menu">
+
+    <h1>Slither Clone</h1>
+
+    <input
+        id="name"
+        placeholder="Enter your name"
+        maxlength="20"
+    >
+
+    <br><br>
+
+    <label>Snake Color</label>
+
+    <br>
+
+    <input
+        id="color"
+        type="color"
+        value="#44ff44"
+    >
+
+    <br><br>
+
+    <button id="play">
+        Play
+    </button>
+
+    <p>
+        Move mouse to steer<br>
+        Hold <b>Shift</b> to boost
+    </p>
+
+</div>
+
+<canvas id="game"></canvas>
+
+<div id="leaderboard">
+
+    <h2>Leaderboard</h2>
+
+    <ol id="leaders"></ol>
+
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+
+<script src="game.js"></script>
+
+</body>
+</html>
